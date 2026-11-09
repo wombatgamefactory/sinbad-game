@@ -202,7 +202,7 @@ legend { font-weight: 700; padding: 0; margin-bottom: 4px; }
 .isle__num { position: absolute; left: -5px; top: -5px; width: 19px; height: 19px; border-radius: 50%; background: var(--cream); color: var(--ink); font: 800 0.72rem/19px var(--font-body); text-align: center; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
 .isle__cargo { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 3px; padding: 8px 2px 2px; background: linear-gradient(to bottom, transparent, rgba(24, 12, 6, 0.88)); border-radius: 0 0 9px 9px; color: var(--cream); font-size: 0.68rem; line-height: 1.1; }
 .isle__badge { width: 14px; height: 14px; flex: none; }
-.isle__ships { --pawn: var(--pawn-isle); position: absolute; left: 2px; right: 2px; bottom: 15px; display: flex; justify-content: center; align-items: flex-end; }
+.isle__ships { --pawn: var(--pawn-isle); --lift: 15px; --extra: 0px; position: absolute; left: 2px; right: 2px; bottom: calc(var(--lift) + var(--extra)); display: flex; justify-content: center; align-items: flex-end; }
 .isle__next { position: absolute; right: 3px; top: 3px; display: flex; gap: 2px; flex-wrap: wrap; justify-content: flex-end; max-width: 70%; }
 .nextdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--seat); border: 2px solid var(--cream); box-shadow: 0 0 0 1px var(--ink); }
 .nextdot--key { vertical-align: -1px; margin-right: 3px; }
@@ -221,10 +221,12 @@ button.isle:focus-visible { outline: none; }
 .pawn:first-child { margin-left: 0; }
 .pawn .pawn__img, .pawn .shipchip { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7)); }
 .pawn .shipchip { aspect-ratio: auto; border-radius: 40%; }
-/* three or more ships on one island: a smaller pawn, wrapped into two overlapping rows so they stay on the card */
-.isle__ships[data-n='3'], .isle__ships[data-n='4'], .isle__ships[data-n='5'] { flex-wrap: wrap; --pawn: calc(var(--pawn-isle) * 0.8); }
+/* three or more ships on one island: smaller pawns, wrapped into overlapping rows that stay on the card, above the cargo name
+   (three get 0.7 of the normal pawn, four and five 0.62; the lift keeps the lowest row clear of the label despite the row overlap) */
+.isle__ships[data-n='3'], .isle__ships[data-n='4'], .isle__ships[data-n='5'] { flex-wrap: wrap; --pawn: calc(var(--pawn-isle) * 0.8); --extra: calc(var(--pawn) * 0.3); }
+.isle__ships[data-n='3'] { --pawn: calc(var(--pawn-isle) * 0.7); }
+.isle__ships[data-n='4'], .isle__ships[data-n='5'] { --pawn: calc(var(--pawn-isle) * 0.62); }
 .isle__ships[data-n='3'] .pawn, .isle__ships[data-n='4'] .pawn, .isle__ships[data-n='5'] .pawn { margin-bottom: calc(var(--pawn) * -0.3); }
-.isle__ships[data-n='3'] .pawn:first-child, .isle__ships[data-n='4'] .pawn:first-child, .isle__ships[data-n='5'] .pawn:first-child { margin-left: calc(var(--pawn) * -0.22); }
 .pawn.is-you::after { content: ''; position: absolute; left: 10%; right: 10%; bottom: -5px; height: 4px; border-radius: 2px; background: var(--turn); box-shadow: 0 0 0 1px var(--cream), 0 1px 3px rgba(0, 0, 0, 0.6); }
 .pawn.is-sailing { z-index: 6; }
 .pawn.is-new { animation: dropin 0.45s ease-out; }
@@ -476,7 +478,7 @@ body[data-busy='1'] .trick { cursor: pointer; }
   .ring__loop { width: 32px; height: 32px; }
   .isle__cargo { font-size: 0.78rem; padding-top: 12px; }
   .isle__badge { width: 17px; height: 17px; }
-  .isle__ships { bottom: 19px; }
+  .isle__ships { --lift: 19px; }
   .isle__num { width: 22px; height: 22px; font-size: 0.8rem; line-height: 22px; }
   .nextdot { width: 12px; height: 12px; }
   .isle__hold, .isle__go { font-size: 0.74rem; top: 30%; }

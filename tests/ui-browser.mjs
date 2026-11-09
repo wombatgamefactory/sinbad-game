@@ -226,6 +226,8 @@ async function toFirstCard(page, timeout = 30000) {
   check('4p: legal cards carry a would-win hint', s.hints > 3);
   check('4p: end screen ranks everyone with seat badges and a winner', (await page.locator('.ranking .rank').count()) === 4 && (await page.locator('.ranking .badge').count()) === 4 && (await page.locator('.rank.is-winner').count()) >= 1);
   check('4p: the typed name is used', /Mia/.test(await page.textContent('.ranking')));
+  // Regression (post-launch QA): the result replaced the final reckoning, which counted as "an overlay was already up", so keyboard focus stayed on nothing.
+  check('4p: the result screen puts keyboard focus on Play again', await page.evaluate(() => document.activeElement && document.activeElement.dataset.action === 'again'), await page.evaluate(() => String(document.activeElement && (document.activeElement.className || document.activeElement.tagName))));
   check('4p: the log has trick lines', (await page.locator('.log__item--trick').count()) > 15, `${await page.locator('.log__item--trick').count()}`);
   await shot(page, 'end-1280');
   check('4p: no horizontal scroll at the end', (await overflow(page)) <= 0);
@@ -283,6 +285,38 @@ for (const level of levels.filter((l) => ['easy', 'medium', 'hard'].includes(l))
   while (Date.now() < deadline) { if ((await humanStep(page, s)) === 'end') break; }
   check('pass-and-play: the game ends, with a cover before each human turn and no leak behind it', (await page.locator('.end--game').count()) === 1 && s.covers > 10 && s.coverLeaks === 0, JSON.stringify(s));
   await page.close();
+}
+
+// ---------- four and five ships on one island (post-launch QA) ----------
+// Five humans pass the device and all moor at island 1: the pawns must stay on the island card and leave the cargo name readable.
+// (Before the fix the first pawn hung 7 px off the card and the second row sat over the name.)
+for (const [w, h] of [[1280, 900], [390, 844]]) {
+  for (const n of [5, 4, 3]) {
+    const page = await newPage(w, h, w < 700 ? { hasTouch: true, isMobile: true } : {});
+    await setup(page, { players: n, types: Array(5).fill('human'), names: ['Ann', 'Bo', 'Cy', 'Di', 'Ed'], q: 'seed=5' });
+    const deadline = Date.now() + 40000;
+    while (Date.now() < deadline && !(await page.locator('.hand .card.is-legal').count())) {
+      if (await page.locator('.cover').count()) { await tryClick(page.locator('.cover .btn--primary')); continue; }
+      if (await page.locator('.ring button.isle.is-pickable').count()) {
+        await tryClick(page.locator('.ring button.isle[data-island-btn="0"]'));
+        if (page.__touch) await tryClick(page.locator('.ring button.isle.is-selected'), { timeout: 1500 });
+        continue;
+      }
+      await page.waitForTimeout(30);
+    }
+    const g = await page.evaluate(() => {
+      const li = document.querySelector('.ring__isle[data-island="0"]');
+      const ir = li.querySelector('.isle__img, .asset-chip').getBoundingClientRect();
+      const name = li.querySelector('.isle__cargo b').getBoundingClientRect();
+      const pawns = [...li.querySelectorAll('.pawn')].map((p) => p.getBoundingClientRect());
+      const outside = pawns.filter((r) => r.left < ir.left - 3 || r.right > ir.right + 3 || r.top < ir.top - 3 || r.bottom > ir.bottom + 3).length;
+      const overName = pawns.filter((r) => Math.max(0, Math.min(r.bottom, name.bottom) - Math.max(r.top, name.top)) * Math.max(0, Math.min(r.right, name.right) - Math.max(r.left, name.left)) > 0.2 * name.width * name.height).length;
+      return { n: pawns.length, outside, overName, sideways: document.documentElement.scrollWidth - document.documentElement.clientWidth };
+    });
+    check(`${n} ships on one island at ${w}px: all ${n} pawns are on island 1 and stay inside its card`, g.n === n && g.outside === 0, JSON.stringify(g));
+    check(`${n} ships on one island at ${w}px: no pawn covers the cargo name, no sideways scroll`, g.overName === 0 && g.sideways <= 0, JSON.stringify(g));
+    await page.close();
+  }
 }
 
 // ---------- non-standard rules ----------

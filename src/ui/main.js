@@ -340,7 +340,7 @@ function render() {
   if (!ctl) return;
   document.body.dataset.screen = 'game';
   const st = ctl.state;
-  const hadOverlay = !!app.querySelector('.overlay, .cover');
+  const hadOverlay = overlayKind();
   const hadHandFocus = !!(document.activeElement && document.activeElement.closest && document.activeElement.closest('.hand, .decision'));
 
   if (!ui.frame && !ui.modal && ctl.needsHandoff() && st.phase !== 'over') {
@@ -420,8 +420,17 @@ function animateSails(sails) {
   }
 }
 
+/** Which overlay is up ('' for none): a reckoning, the result, or a cover (per seat). A change of kind needs focus moved onto it. */
+function overlayKind() {
+  const o = app.querySelector('[data-overlay], .cover');
+  if (!o) return '';
+  if (o.dataset.overlay) return o.dataset.overlay;
+  const b = o.querySelector('[data-seat]');
+  return `cover:${b ? b.dataset.seat : ''}`;
+}
+
 function focusOverlay(hadOverlay) {
-  if (hadOverlay) return;
+  if (hadOverlay && hadOverlay === overlayKind()) return; // the same overlay re-rendered: keep the player's focus
   const btn = app.querySelector('.overlay .btn--primary, .cover .btn--primary');
   if (btn) btn.focus({ preventScroll: false });
 }

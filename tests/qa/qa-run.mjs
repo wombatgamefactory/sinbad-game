@@ -151,6 +151,15 @@ async function humanStep(page, stats) {
     return 'cover';
   }
   if (await page.locator('#continue').count()) { if (await tryClick(page.locator('#continue'))) stats.summaries++; return 'summary'; }
+  // The other decision: every voyage opens with the mooring, one button per island (a different island each time, so ships share and spread).
+  const moor = page.locator('.ring button.isle.is-pickable');
+  const nMoor = await moor.count();
+  if (nMoor) {
+    stats.moorings = (stats.moorings || 0) + 1;
+    if (!(await tryClick(moor.nth((stats.moorings * 5) % nMoor)))) { stats.moorings--; return 'retry'; }
+    if (page.__touch) await tryClick(page.locator('.ring button.isle.is-selected'), { timeout: 1500 });
+    return 'moor';
+  }
   const legal = page.locator('.hand .card.is-legal');
   if (await legal.count()) {
     if (await page.locator('.hand .card__hint').count()) stats.hints++;
@@ -170,6 +179,16 @@ async function playHuman(page, limitMs = 150000, until = null) {
     if (until && until(stats)) break;
   }
   return stats;
+}
+/** Moors (and confirms any cover) until the human has a card to play: every voyage starts with the mooring. */
+async function toFirstCard(page, timeout = 30000) {
+  const stats = newStats();
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    if (await page.locator('.hand .card.is-legal').count()) return;
+    await humanStep(page, stats);
+  }
+  throw new Error('no playable card appeared');
 }
 const finish = (page) => page.waitForSelector('.end--game', { timeout: 120000 });
 
@@ -216,7 +235,7 @@ await scenario('Landing from the sub-path', async () => {
   check('hook is the tagline', (await page.textContent('.hero__hook')) === GAME_TAGLINE);
   if (tokensLeft) console.log('  (index.html still has unfilled tokens: the og / canonical checks are skipped)');
   else {
-    const abs = await page.$$eval('meta[property^="og:"][content], link[rel=canonical]', (els) => els.map((e) => e.content || e.href));
+    const abs = await page.$$eval('meta[property="og:url"], meta[property="og:image"], meta[name="twitter:image"], link[rel=canonical]', (els) => els.map((e) => e.content || e.href));
     check('og and canonical addresses are absolute https', abs.every((u) => /^https:\/\//.test(u)), abs.join(' '));
   }
   const href = await page.getAttribute('a[data-action=rulebook]', 'href');
@@ -272,14 +291,15 @@ await scenario('Human v bots to the end (every level, 2 to 5 players)', async ()
     for (const n of counts) {
       const page = await newPage(1280, 900);
       await begin(page, { players: n, types: ['human', level, level, level, level], names: ['Mia'] }, `seed=${n}&botdelay=0`);
-      await page.waitForSelector('.hand .card.is-legal', { timeout: 30000 });
+      await toFirstCard(page);
       if (level === 'hard') {
         await page.evaluate(() => { window.__gap = 0; let last = performance.now(); setInterval(() => { const t = performance.now(); window.__gap = Math.max(window.__gap, t - last - 50); last = t; }, 50); });
       }
       const s = await playHuman(page);
-      const hs = n <= 3 ? 10 : 8;
+      const hs = { 2: 13, 3: 13, 4: 10, 5: 8 }[n];
+      const voyages = { 2: 4, 3: 3, 4: 4, 5: 5 }[n];
       check(`${level} ${n}p: the game ends with a ranking of ${n}`, (await page.locator('.end--game').count()) === 1 && (await page.locator('.rank').count()) === n, JSON.stringify(s));
-      check(`${level} ${n}p: the human played a plausible number of cards and saw ${n} reckonings`, s.plays >= (n * hs) / 3 && s.summaries === n, JSON.stringify(s));
+      check(`${level} ${n}p: the human played a plausible number of cards and saw ${voyages} reckonings`, s.plays >= (n * hs) / 3 && s.summaries === voyages, JSON.stringify(s));
       if (level === 'hard') {
         const gap = await page.evaluate(() => window.__gap);
         check(`hard ${n}p: the page never froze (longest main-thread gap under 250 ms)`, gap < 250, `${gap.toFixed(0)} ms`);
@@ -302,7 +322,7 @@ await scenario('All-bot games at 2 to 5 seats', async () => {
     check(`${n} bots: finishes by itself with a ranking`, (await page.locator('.rank').count()) === n);
     check(`${n} bots: no hand is shown`, (await page.locator('.hand .card').count()) === 0);
     const stored = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)).games[0], STORE);
-    check(`${n} bots: recorded with ${n} hands and no human seat`, stored.hands === n && stored.seats.every((s) => s.type === 'bot'));
+    check(`${n} bots: recorded with ${{ 2: 4, 3: 3, 4: 4, 5: 5 }[n]} voyages and no human seat`, stored.hands === { 2: 4, 3: 3, 4: 4, 5: 5 }[n] && stored.seats.every((s) => s.type === 'bot'));
     if (n === 4) await shot(page, 'bots-4-end');
     await page.close();
   }
@@ -394,7 +414,7 @@ await scenario('Bug reporter', async () => {
   await page.keyboard.press('Escape');
   await configure(page, { players: 3 });
   await page.click('#start');
-  await page.waitForSelector('.hand .card.is-legal');
+  await toFirstCard(page);
   await playHuman(page, 20000, (s) => s.plays >= 3);
   await page.keyboard.press('Control+Shift+B');
   await page.waitForSelector('#bug-form');
@@ -413,7 +433,7 @@ await scenario('Bug reporter', async () => {
   for (const w of WIDTHS) {
     const p = await newPage(w, 900, w < 700 ? { hasTouch: true, isMobile: true } : {});
     await begin(p, { players: 4 });
-    await p.waitForSelector('.hand .card.is-legal');
+    await toFirstCard(p);
     await p.evaluate(() => document.querySelector('.hand').scrollIntoView({ block: 'center' }));
     const overlap = await p.evaluate(() => {
       const b = document.getElementById('bug-button').getBoundingClientRect();
@@ -442,7 +462,7 @@ await scenario('Responsive sweep: 2, 4 and 5 players at every width', async () =
     for (const n of [2, 4, 5]) {
       const page = await newPage(w, 844, w < 700 ? { hasTouch: true, isMobile: true } : {});
       await begin(page, { players: n, types: ['human', 'medium', 'easy', 'easy', 'easy'] }, 'seed=9&botdelay=0');
-      await page.waitForSelector('.hand .card.is-legal');
+      await toFirstCard(page);
       const first = await page.$$eval('.hand .card', (cs) => cs.map((c) => c.getBoundingClientRect().width));
       check(`${w}px ${n}p: first screen fits and hand cards are at least 36 px wide`, (await overflow(page)) <= 0 && Math.min(...first) >= 36, `min ${Math.min(...first).toFixed(0)}`);
       if (n === 4) await shot(page, `start-${n}p-${w}`);
@@ -464,12 +484,12 @@ await scenario('Responsive sweep: 2, 4 and 5 players at every width', async () =
 await scenario('Reduced motion', async () => {
   const dflt = await newPage();
   await begin(dflt, { players: 3 }, 'seed=11&botdelay=800');
-  await dflt.waitForSelector('.hand .card.is-legal');
+  await toFirstCard(dflt);
   check('by default cards transition', parseFloat(await dflt.$eval('.card', (e) => getComputedStyle(e).transitionDuration)) > 0);
   await dflt.close();
   const rm = await newPage(1280, 900, { reducedMotion: 'reduce' });
   await begin(rm, { players: 3 }, 'seed=11&botdelay=800');
-  await rm.waitForSelector('.hand .card.is-legal');
+  await toFirstCard(rm);
   check('with reduced motion the transitions and animations are off', parseFloat(await rm.$eval('.card', (e) => getComputedStyle(e).transitionDuration)) === 0 && (await rm.$eval('.seat', (e) => getComputedStyle(e).animationName)) === 'none');
   await rm.close();
 });
@@ -477,7 +497,7 @@ await scenario('Reduced motion', async () => {
 await scenario('Keyboard play', async () => {
   const page = await newPage();
   await begin(page, { players: 3, auto: false });
-  await page.waitForSelector('.hand .card.is-legal');
+  await toFirstCard(page);
   await page.focus('.hand .card.is-legal');
   await page.keyboard.press('Home');
   const first = await page.evaluate(() => document.activeElement.dataset.card);
@@ -505,7 +525,7 @@ await scenario('Keyboard play', async () => {
 await scenario('Leaving a game', async () => {
   const page = await newPage();
   await begin(page, { players: 3 }, 'seed=71&botdelay=0');
-  await page.waitForSelector('.hand .card.is-legal');
+  await toFirstCard(page);
   await playHuman(page, 20000, (s) => s.plays >= 3);
   page.once('dialog', (d) => d.dismiss());
   await page.click('[data-action=quit]');
