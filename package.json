@@ -1,0 +1,16 @@
+{
+  "name": "sinbad-game",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser version of the card game The Voyages of Sinbad",
+  "scripts": {
+    "dev": "npx http-server -p 8080 -c-1",
+    "test": "node tests/run-all.mjs",
+    "sim": "node tests/sim.mjs",
+    "test:ui": "node tests/ui-browser.mjs --require",
+    "test:browser": "node tests/ui-browser.mjs --require && node tests/stats-browser.mjs --require",
+    "qa": "node tests/qa/qa-run.mjs",
+    "sweep": "node tests/qa/sweep.mjs"
+  }
+}

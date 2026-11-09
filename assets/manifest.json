@@ -1,0 +1,786 @@
+{
+ "version": 1,
+ "total_bytes": 2511796,
+ "assets": [
+  {
+   "id": "avatar-1",
+   "file": "avatars/avatar-1.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 7340,
+   "status": "real",
+   "what": "Seat avatar 1: pearls merchant, circular with ring",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "avatar-2",
+   "file": "avatars/avatar-2.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 7562,
+   "status": "real",
+   "what": "Seat avatar 2: silk merchant, circular with ring",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "avatar-3",
+   "file": "avatars/avatar-3.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 5916,
+   "status": "real",
+   "what": "Seat avatar 3: spice merchant, circular with ring",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "avatar-4",
+   "file": "avatars/avatar-4.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 7418,
+   "status": "real",
+   "what": "Seat avatar 4: amber merchant, circular with ring",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "avatar-5",
+   "file": "avatars/avatar-5.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 7150,
+   "status": "real",
+   "what": "Seat avatar 5: dhow at sunset, circular with ring",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-1",
+   "file": "cards/card-amber-1.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 45366,
+   "status": "real",
+   "what": "Amber (yellow) 1 (1 serpent)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-10",
+   "file": "cards/card-amber-10.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46188,
+   "status": "real",
+   "what": "Amber (yellow) 10 (2 serpents)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-2",
+   "file": "cards/card-amber-2.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46494,
+   "status": "real",
+   "what": "Amber (yellow) 2",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-3",
+   "file": "cards/card-amber-3.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46702,
+   "status": "real",
+   "what": "Amber (yellow) 3",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-4",
+   "file": "cards/card-amber-4.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46366,
+   "status": "real",
+   "what": "Amber (yellow) 4",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-5",
+   "file": "cards/card-amber-5.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46596,
+   "status": "real",
+   "what": "Amber (yellow) 5",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-6",
+   "file": "cards/card-amber-6.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46986,
+   "status": "real",
+   "what": "Amber (yellow) 6",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-7",
+   "file": "cards/card-amber-7.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46222,
+   "status": "real",
+   "what": "Amber (yellow) 7",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-8",
+   "file": "cards/card-amber-8.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46664,
+   "status": "real",
+   "what": "Amber (yellow) 8",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-amber-9",
+   "file": "cards/card-amber-9.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 46940,
+   "status": "real",
+   "what": "Amber (yellow) 9",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-back",
+   "file": "cards/card-back.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 31596,
+   "status": "real",
+   "what": "Card back, dhow at sunset",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-1",
+   "file": "cards/card-pearls-1.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40668,
+   "status": "real",
+   "what": "Pearls (blue) 1 (1 serpent)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-10",
+   "file": "cards/card-pearls-10.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40992,
+   "status": "real",
+   "what": "Pearls (blue) 10 (2 serpents)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-2",
+   "file": "cards/card-pearls-2.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40232,
+   "status": "real",
+   "what": "Pearls (blue) 2",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-3",
+   "file": "cards/card-pearls-3.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40472,
+   "status": "real",
+   "what": "Pearls (blue) 3",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-4",
+   "file": "cards/card-pearls-4.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40236,
+   "status": "real",
+   "what": "Pearls (blue) 4",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-5",
+   "file": "cards/card-pearls-5.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40786,
+   "status": "real",
+   "what": "Pearls (blue) 5",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-6",
+   "file": "cards/card-pearls-6.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41054,
+   "status": "real",
+   "what": "Pearls (blue) 6",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-7",
+   "file": "cards/card-pearls-7.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40010,
+   "status": "real",
+   "what": "Pearls (blue) 7",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-8",
+   "file": "cards/card-pearls-8.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40606,
+   "status": "real",
+   "what": "Pearls (blue) 8",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-pearls-9",
+   "file": "cards/card-pearls-9.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40706,
+   "status": "real",
+   "what": "Pearls (blue) 9",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-1",
+   "file": "cards/card-silk-1.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41522,
+   "status": "real",
+   "what": "Silk (green) 1 (1 serpent)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-10",
+   "file": "cards/card-silk-10.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 42326,
+   "status": "real",
+   "what": "Silk (green) 10 (2 serpents)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-2",
+   "file": "cards/card-silk-2.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41602,
+   "status": "real",
+   "what": "Silk (green) 2",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-3",
+   "file": "cards/card-silk-3.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41726,
+   "status": "real",
+   "what": "Silk (green) 3",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-4",
+   "file": "cards/card-silk-4.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41408,
+   "status": "real",
+   "what": "Silk (green) 4",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-5",
+   "file": "cards/card-silk-5.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41682,
+   "status": "real",
+   "what": "Silk (green) 5",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-6",
+   "file": "cards/card-silk-6.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41770,
+   "status": "real",
+   "what": "Silk (green) 6",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-7",
+   "file": "cards/card-silk-7.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41236,
+   "status": "real",
+   "what": "Silk (green) 7",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-8",
+   "file": "cards/card-silk-8.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41956,
+   "status": "real",
+   "what": "Silk (green) 8",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-silk-9",
+   "file": "cards/card-silk-9.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 41872,
+   "status": "real",
+   "what": "Silk (green) 9",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-1",
+   "file": "cards/card-spice-1.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 39692,
+   "status": "real",
+   "what": "Spice (red) 1 (1 serpent)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-10",
+   "file": "cards/card-spice-10.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40500,
+   "status": "real",
+   "what": "Spice (red) 10 (2 serpents)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-2",
+   "file": "cards/card-spice-2.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 39944,
+   "status": "real",
+   "what": "Spice (red) 2",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-3",
+   "file": "cards/card-spice-3.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40034,
+   "status": "real",
+   "what": "Spice (red) 3",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-4",
+   "file": "cards/card-spice-4.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 39786,
+   "status": "real",
+   "what": "Spice (red) 4",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-5",
+   "file": "cards/card-spice-5.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 39980,
+   "status": "real",
+   "what": "Spice (red) 5",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-6",
+   "file": "cards/card-spice-6.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40488,
+   "status": "real",
+   "what": "Spice (red) 6",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-7",
+   "file": "cards/card-spice-7.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 39540,
+   "status": "real",
+   "what": "Spice (red) 7",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-8",
+   "file": "cards/card-spice-8.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40186,
+   "status": "real",
+   "what": "Spice (red) 8",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "card-spice-9",
+   "file": "cards/card-spice-9.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 40516,
+   "status": "real",
+   "what": "Spice (red) 9",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "how-to-play-back",
+   "file": "cards/how-to-play-back.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 32332,
+   "status": "real",
+   "what": "How-to-play card back, the roc",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "how-to-play-front",
+   "file": "cards/how-to-play-front.webp",
+   "width": 300,
+   "height": 429,
+   "bytes": 28972,
+   "status": "real",
+   "what": "How-to-play card front, Playing a trick (6 steps)",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  },
+  {
+   "id": "favicon-180",
+   "file": "favicon-180.png",
+   "width": 180,
+   "height": 180,
+   "bytes": 27567,
+   "status": "real",
+   "what": "Apple touch icon 180",
+   "source": "AI-Art/sinbad-serpent-glyph-white-transparent-v1.png"
+  },
+  {
+   "id": "favicon-32",
+   "file": "favicon-32.png",
+   "width": 32,
+   "height": 32,
+   "bytes": 2221,
+   "status": "real",
+   "what": "Favicon 32",
+   "source": "AI-Art/sinbad-serpent-glyph-white-transparent-v1.png"
+  },
+  {
+   "id": "favicon-ico",
+   "file": "favicon.ico",
+   "width": 48,
+   "height": 48,
+   "bytes": 7583,
+   "status": "real",
+   "what": "Favicon .ico (16/32/48)",
+   "source": "AI-Art/sinbad-serpent-glyph-white-transparent-v1.png"
+  },
+  {
+   "id": "favicon",
+   "file": "favicon.png",
+   "width": 64,
+   "height": 64,
+   "bytes": 6838,
+   "status": "real",
+   "what": "Favicon 64, cream serpent on chocolate",
+   "source": "AI-Art/sinbad-serpent-glyph-white-transparent-v1.png"
+  },
+  {
+   "id": "hero-wide",
+   "file": "hero/hero-wide.jpg",
+   "width": 1600,
+   "height": 782,
+   "bytes": 199120,
+   "status": "real",
+   "what": "Title banner, The Voyages of SINBAD (1600 wide)",
+   "source": "AI-Art/sinbad-logo-landing-v2.jpg"
+  },
+  {
+   "id": "badge-amber",
+   "file": "icons/badge-amber.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 4350,
+   "status": "real",
+   "what": "Amber (yellow) badge: icon on a suit-colour disc (colour-blind cue)",
+   "source": "images/suit-icon-yellow.png"
+  },
+  {
+   "id": "badge-pearls",
+   "file": "icons/badge-pearls.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 6332,
+   "status": "real",
+   "what": "Pearls (blue) badge: icon on a suit-colour disc (colour-blind cue)",
+   "source": "images/suit-icon-blue.png"
+  },
+  {
+   "id": "badge-silk",
+   "file": "icons/badge-silk.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 5080,
+   "status": "real",
+   "what": "Silk (green) badge: icon on a suit-colour disc (colour-blind cue)",
+   "source": "images/suit-icon-green.png"
+  },
+  {
+   "id": "badge-spice",
+   "file": "icons/badge-spice.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 5204,
+   "status": "real",
+   "what": "Spice (red) badge: icon on a suit-colour disc (colour-blind cue)",
+   "source": "images/suit-icon-red.png"
+  },
+  {
+   "id": "icon-amber",
+   "file": "icons/icon-amber.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 3308,
+   "status": "real",
+   "what": "Amber (yellow) suit icon, black on transparent (as printed on the cards)",
+   "source": "images/suit-icon-yellow.png"
+  },
+  {
+   "id": "icon-pearls",
+   "file": "icons/icon-pearls.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 8070,
+   "status": "real",
+   "what": "Pearls (blue) suit icon, black on transparent (as printed on the cards)",
+   "source": "images/suit-icon-blue.png"
+  },
+  {
+   "id": "icon-silk",
+   "file": "icons/icon-silk.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 6002,
+   "status": "real",
+   "what": "Silk (green) suit icon, black on transparent (as printed on the cards)",
+   "source": "images/suit-icon-green.png"
+  },
+  {
+   "id": "icon-spice",
+   "file": "icons/icon-spice.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 5344,
+   "status": "real",
+   "what": "Spice (red) suit icon, black on transparent (as printed on the cards)",
+   "source": "images/suit-icon-red.png"
+  },
+  {
+   "id": "serpent-black",
+   "file": "icons/serpent-black.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 6174,
+   "status": "real",
+   "what": "Serpent glyph, black on transparent",
+   "source": "AI-Art/sinbad-serpent-glyph-black-transparent-v1.png"
+  },
+  {
+   "id": "serpent-white",
+   "file": "icons/serpent-white.webp",
+   "width": 128,
+   "height": 128,
+   "bytes": 6266,
+   "status": "real",
+   "what": "Serpent glyph, white on transparent",
+   "source": "AI-Art/sinbad-serpent-glyph-white-transparent-v1.png"
+  },
+  {
+   "id": "island-amber-a",
+   "file": "islands/island-amber-a.webp",
+   "width": 480,
+   "height": 335,
+   "bytes": 61602,
+   "status": "real",
+   "what": "Amber (yellow) island card A (landscape, rounded)",
+   "source": "AI-Art/sinbad-island-amber-a-black-lines-2400-v1.png"
+  },
+  {
+   "id": "island-amber-b",
+   "file": "islands/island-amber-b.webp",
+   "width": 480,
+   "height": 335,
+   "bytes": 44124,
+   "status": "real",
+   "what": "Amber (yellow) island card B (landscape, rounded)",
+   "source": "AI-Art/sinbad-island-amber-b-black-lines-2400-v1.png"
+  },
+  {
+   "id": "island-pearls-a",
+   "file": "islands/island-pearls-a.webp",
+   "width": 480,
+   "height": 335,
+   "bytes": 46390,
+   "status": "real",
+   "what": "Pearls (blue) island card A (landscape, rounded)",
+   "source": "AI-Art/sinbad-island-pearls-a-black-lines-2400-v1.png"
+  },
+  {
+   "id": "island-pearls-b",
+   "file": "islands/island-pearls-b.webp",
+   "width": 480,
+   "height": 335,
+   "bytes": 26540,
+   "status": "real",
+   "what": "Pearls (blue) island card B (landscape, rounded)",
+   "source": "AI-Art/sinbad-island-pearls-b-black-lines-2400-v1.png"
+  },
+  {
+   "id": "island-silk-a",
+   "file": "islands/island-silk-a.webp",
+   "width": 480,
+   "height": 335,
+   "bytes": 39026,
+   "status": "real",
+   "what": "Silk (green) island card A (landscape, rounded)",
+   "source": "AI-Art/sinbad-island-silk-a-black-lines-2400-v1.png"
+  },
+  {
+   "id": "island-silk-b",
+   "file": "islands/island-silk-b.webp",
+   "width": 480,
+   "height": 335,
+   "bytes": 32320,
+   "status": "real",
+   "what": "Silk (green) island card B (landscape, rounded)",
+   "source": "AI-Art/sinbad-island-silk-b-black-lines-2400-v1.png"
+  },
+  {
+   "id": "island-spice-a",
+   "file": "islands/island-spice-a.webp",
+   "width": 480,
+   "height": 335,
+   "bytes": 47974,
+   "status": "real",
+   "what": "Spice (red) island card A (landscape, rounded)",
+   "source": "AI-Art/sinbad-island-spice-a-black-lines-2400-v1.png"
+  },
+  {
+   "id": "island-spice-b",
+   "file": "islands/island-spice-b.webp",
+   "width": 480,
+   "height": 335,
+   "bytes": 39270,
+   "status": "real",
+   "what": "Spice (red) island card B (landscape, rounded)",
+   "source": "AI-Art/sinbad-island-spice-b-black-lines-2400-v1.png"
+  },
+  {
+   "id": "dhow-black",
+   "file": "ships/dhow-black.webp",
+   "width": 256,
+   "height": 215,
+   "bytes": 11274,
+   "status": "real",
+   "what": "Dhow pawn, black (seat colour 2), cream ring and dark edge",
+   "source": "AI-Art/sinbad-token-dhow-silhouette-v1.png (art-scripts/make-dhow-ships-v1.py)"
+  },
+  {
+   "id": "dhow-brown",
+   "file": "ships/dhow-brown.webp",
+   "width": 256,
+   "height": 215,
+   "bytes": 10542,
+   "status": "real",
+   "what": "Dhow pawn, brown (seat colour 5), cream ring and dark edge",
+   "source": "AI-Art/sinbad-token-dhow-silhouette-v1.png (art-scripts/make-dhow-ships-v1.py)"
+  },
+  {
+   "id": "dhow-ivory",
+   "file": "ships/dhow-ivory.webp",
+   "width": 256,
+   "height": 215,
+   "bytes": 8756,
+   "status": "real",
+   "what": "Dhow pawn, ivory (seat colour 1), cream ring and dark edge",
+   "source": "AI-Art/sinbad-token-dhow-silhouette-v1.png (art-scripts/make-dhow-ships-v1.py)"
+  },
+  {
+   "id": "dhow-magenta",
+   "file": "ships/dhow-magenta.webp",
+   "width": 256,
+   "height": 215,
+   "bytes": 11238,
+   "status": "real",
+   "what": "Dhow pawn, magenta (seat colour 4), cream ring and dark edge",
+   "source": "AI-Art/sinbad-token-dhow-silhouette-v1.png (art-scripts/make-dhow-ships-v1.py)"
+  },
+  {
+   "id": "dhow-purple",
+   "file": "ships/dhow-purple.webp",
+   "width": 256,
+   "height": 215,
+   "bytes": 10928,
+   "status": "real",
+   "what": "Dhow pawn, purple (seat colour 3), cream ring and dark edge",
+   "source": "AI-Art/sinbad-token-dhow-silhouette-v1.png (art-scripts/make-dhow-ships-v1.py)"
+  },
+  {
+   "id": "dhow-svg",
+   "file": "ships/dhow.svg",
+   "width": 96,
+   "height": 96,
+   "bytes": 579,
+   "status": "real",
+   "what": "Dhow silhouette as SVG, tint via --seat CSS variable",
+   "source": "drawn in code (art-scripts/make-web-assets-v1.py)"
+  },
+  {
+   "id": "table-texture",
+   "file": "table-texture.webp",
+   "width": 512,
+   "height": 512,
+   "bytes": 5436,
+   "status": "real",
+   "what": "Seamless dark 512 px table tile, from the card back's sea",
+   "source": "TTS/Sinbad-Cards-TTS.png"
+  }
+ ]
+}
