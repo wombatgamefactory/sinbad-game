@@ -12,7 +12,7 @@
 //                             mode; the trade and the sail are consequences, never separate actions.
 
 import { SUIT_NAMES } from './rules.js';
-import { cardSuit, cardValue, cardName, listCardNames } from './cards.js';
+import { cardSuit, cardValue, cardName, listCardNames, cardSerpents } from './cards.js';
 
 /**
  * R4.3 the ladder (and R13.3 under TRADE=optional). Every card of `hand` that may be played now.
@@ -50,8 +50,18 @@ export function playMode(hand, card, ledSuit, islandCargo) {
 
 /** True for a play that counts as the led cargo (R4.7): the lead, a follow or a trade. */
 export const countsAsLed = (mode) => mode !== 'discard';
-/** True for a play that sails the ship afterwards (R4.10): a trade or a discard. */
+/** True for a play that sails the ship afterwards because it did not follow (R4.10 trigger 1): a trade or a discard. */
 export const sails = (mode) => mode === 'trade' || mode === 'discard';
+
+/**
+ * R4.10 (serpents sail you): the sail after a trick. A ship sails one island when its card did not follow
+ * (a trade or a discard) or carries a serpent (a 1 or a 10), however it was played, a lead included. It is one
+ * boolean, so a ship sails at most one island per trick whatever fires.
+ * @param {string} mode  'lead' | 'follow' | 'trade' | 'discard'
+ * @param {string} card
+ * @param {{serpentsByNumber:object}} params
+ */
+export const sailsOnPlay = (mode, card, params) => sails(mode) || cardSerpents(card, params) > 0;
 
 /**
  * R4.7, R4.8, R4.12, R13.2 the winner of a (possibly partial) trick: the highest-numbered card that

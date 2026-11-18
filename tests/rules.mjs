@@ -197,7 +197,7 @@ for (const n of [2, 3, 4, 5]) {
   const e1 = applyAction(g, { type: 'play', card: 'spice-4' });
   const ben = e1.find((e) => e.seat === 1);
   check('R4.3 rung 1: Ben holds Spice and must follow (his only Spice auto-plays)', ben && ben.mode === 'follow' && ben.auto && ben.card === 'spice-7');
-  check('R4.2 / R7.5 the leader\'s card is a lead (her island is Spice too): no sail later', e1[0].mode === 'lead' && e1[0].islandCargo === 'spice');
+  check('R4.2 / R7.5 the leader\'s card is a lead (her island is Spice too) and the 4 is clean: no sail later', e1[0].mode === 'lead' && e1[0].islandCargo === 'spice' && !e1.some((e) => e.type === 'sailed' && e.seat === 0));
   check('R4.3 rung 3: Cleo (no Spice, no Pearls) may discard anything', same(getValidActions(g).map((a) => a.card), ['silk-2', 'amber-4', 'amber-10']));
   applyAction(g, { type: 'play', card: 'amber-10' });
   check('R4.3 rung 2 / R4.4: Dev (no Spice, Silk island) must trade Silk: only the rank is his', same(getValidActions(g).map((a) => a.card), ['silk-5', 'silk-8']) && /island demands Silk/.test(getPlayBlockReason(g, 3, 'silk-5') || 'island demands Silk'));
@@ -253,10 +253,10 @@ for (const n of [2, 3, 4, 5]) {
   check('R4.13 a discard is never of the led cargo nor of the island cargo', d.card.split('-')[0] !== 'spice' && d.card.split('-')[0] !== d.islandCargo);
 }
 {
-  // R7.11 no card of your cargo: no trade, discards still sail. R7.17 followers never sail.
-  const g = position({ players: 2, hands: [['amber-2', 'amber-3'], ['pearls-9', 'amber-1']], ships: [3, 7], leader: 0 });
+  // R7.11 no card of your cargo: no trade, discards still sail. R7.17 a clean follower (rank 2-9) stays parked.
+  const g = position({ players: 2, hands: [['amber-2', 'amber-3'], ['pearls-9', 'amber-5']], ships: [3, 7], leader: 0 });
   const ev = play(g, 'amber-2');
-  check('R7.17 a follower stays parked (Amber island, Amber led)', !ev.some((e) => e.type === 'sailed' && e.trickNo === 1) && tricksOf(g)[0].sails.length === 0);
+  check('R7.17 a clean follower stays parked (Amber island, Amber led)', !ev.some((e) => e.type === 'sailed' && e.trickNo === 1) && tricksOf(g)[0].sails.length === 0);
   check('R4.10 a sail from island 8 wraps to island 1', (() => {
     const h = position({ players: 2, hands: [['spice-2', 'spice-3'], ['pearls-9', 'silk-1']], ships: [0, 7], leader: 0 });
     const e = play(h, 'spice-2', 'pearls-9');
@@ -468,6 +468,84 @@ for (const n of [2, 3, 4, 5]) {
     && trickWinner([P(0, 'spice-7', 'lead'), P(1, 'pearls-7', 'trade')], 'real').seat === 0 && trickWinner([P(0, 'spice-4', 'lead'), P(1, 'pearls-7', 'trade'), P(2, 'spice-7', 'follow')], 'first').seat === 1);
 }
 
+// ---------- R4.10 v2: serpents sail you ----------
+{
+  // (a) a serpent lead sails the leader (R4.2, R7.5). 2p, Spice led, seat 1 follows with a clean card and wins.
+  const a = position({ players: 2, hands: [['spice-1', 'amber-3', 'amber-6'], ['spice-6', 'amber-4', 'amber-8']], ships: [0, 1], leader: 0 });
+  const ea = play(a, 'spice-1');
+  const sa = ea.filter((e) => e.type === 'sailed');
+  check('R4.10 v2 (a) a serpent lead sails the leader one island (0 -> 1), cause serpent, whoever wins', same(sa.map((e) => [e.seat, e.from, e.to, e.cause, e.serpent]), [[0, 0, 1, 'serpent', true]]) && same(a.ships, [1, 1]) && tricksOf(a)[0].winner === 1);
+  check('R4.10 v2 (a) the lead is still a lead; the trick record carries the sail', ea.find((e) => e.type === 'card-played' && e.seat === 0).mode === 'lead' && same(tricksOf(a)[0].sails, [{ seat: 0, from: 0, to: 1, cause: 'serpent', serpent: true }]));
+  const a10 = position({ players: 2, hands: [['spice-10', 'amber-3', 'amber-6'], ['spice-6', 'amber-4', 'amber-8']], ships: [0, 1], leader: 0 });
+  play(a10, 'spice-10');
+  check('R4.10 v2 (a) a 10 lead sails the leader too (one island) and wins the trick', same(a10.ships, [1, 1]) && a10.voyageStats.sails[0] === 1 && tricksOf(a10)[0].winner === 0);
+  // (b) clean leads and clean follows (rank 2 to 9) sail nobody.
+  const b = position({ players: 2, hands: [['spice-5', 'amber-3', 'amber-6'], ['spice-6', 'amber-4', 'amber-8']], ships: [0, 1], leader: 0 });
+  const eb = play(b, 'spice-5');
+  check('R4.10 v2 (b) a clean lead and a clean follow sail nobody', !eb.some((e) => e.type === 'sailed') && same(b.ships, [0, 1]) && tricksOf(b)[0].sails.length === 0 && b.measures.sails === 0);
+  // (c) a serpent follow sails the follower, who followed.
+  const c = position({ players: 2, hands: [['spice-4', 'amber-3', 'amber-6'], ['spice-1', 'amber-4', 'amber-8']], ships: [0, 1], leader: 0 });
+  const ec = play(c, 'spice-4');
+  check('R4.10 v2 (c) a serpent follow sails the follower (1 -> 2) although it followed; the clean leader stays', ec.find((e) => e.type === 'card-played' && e.seat === 1).mode === 'follow' && same(ec.filter((e) => e.type === 'sailed').map((e) => [e.seat, e.from, e.to, e.cause, e.serpent]), [[1, 1, 2, 'serpent', true]]) && same(c.ships, [0, 2]) && tricksOf(c)[0].winner === 0);
+  const c10 = position({ players: 2, hands: [['spice-4', 'amber-3', 'amber-6'], ['spice-10', 'amber-4', 'amber-8']], ships: [0, 1], leader: 0 });
+  play(c10, 'spice-4');
+  check('R4.10 v2 (c) a 10 follow sails too, and the winner who sailed leads the next trick from the new island', same(c10.ships, [0, 2]) && c10.toAct === 1 && c10.leader === 1);
+  // (d) a discarded 10 fires both triggers and sails exactly one island (seat 1 is on a Silk island holding neither Spice nor Silk).
+  const d = position({ players: 2, hands: [['spice-4', 'amber-3', 'amber-6'], ['amber-10', 'pearls-3', 'amber-8']], ships: [0, 1], leader: 0 });
+  const ed = play(d, 'spice-4', 'amber-10');
+  check('R4.10 v2 (d) a discarded 10 sails exactly one island (1 -> 2): one sailed event, cause discard, serpent flag set', ed.find((e) => e.type === 'card-played' && e.seat === 1).mode === 'discard' && same(ed.filter((e) => e.type === 'sailed').map((e) => [e.seat, e.from, e.to, e.cause, e.serpent]), [[1, 1, 2, 'discard', true]]) && same(d.ships, [0, 2]));
+  check('R4.10 v2 (d) the counters see one sail, not two', d.voyageStats.sails[1] === 1 && d.measures.sails === 1 && d.measures.sailsBySeat[1] === 1 && tricksOf(d)[0].sails.length === 1);
+  const d1 = position({ players: 2, hands: [['spice-4', 'amber-3', 'amber-6'], ['amber-1', 'pearls-3', 'amber-8']], ships: [0, 1], leader: 0 });
+  play(d1, 'spice-4', 'amber-1');
+  check('R4.10 v2 (d) a discarded 1 sails exactly one island too', same(d1.ships, [0, 2]) && d1.voyageStats.sails[1] === 1);
+  // (e) a trade with a serpent card sails exactly one island (seat 1 on the Silk island 1, Silk the only legal cargo).
+  const e1 = position({ players: 2, hands: [['spice-4', 'amber-3', 'amber-6'], ['silk-1', 'pearls-3', 'amber-8']], ships: [0, 1], leader: 0 });
+  const ee1 = play(e1, 'spice-4');
+  check('R4.10 v2 (e) a trade of a Silk 1 sails exactly one island (1 -> 2): cause trade, serpent flag set', ee1.find((e) => e.type === 'card-played' && e.seat === 1).mode === 'trade' && same(ee1.filter((e) => e.type === 'sailed').map((e) => [e.seat, e.from, e.to, e.cause, e.serpent]), [[1, 1, 2, 'trade', true]]) && same(e1.ships, [0, 2]) && e1.voyageStats.sails[1] === 1);
+  const e10 = position({ players: 2, hands: [['spice-4', 'amber-3', 'amber-6'], ['silk-10', 'pearls-3', 'amber-8']], ships: [0, 1], leader: 0 });
+  play(e10, 'spice-4');
+  check('R4.10 v2 (e) the forced Silk 10 trade wins, takes the serpents and sails one island only', tricksOf(e10)[0].winner === 1 && tricksOf(e10)[0].serpents === 2 && same(e10.ships, [0, 2]) && e10.measures.sails === 1 && e10.toAct === 1);
+  const et = position({ players: 2, hands: [['spice-4', 'amber-3', 'amber-6'], ['silk-5', 'pearls-3', 'amber-8']], ships: [0, 1], leader: 0 });
+  play(et, 'spice-4');
+  check('R4.10 v2 (e) a clean trade still sails exactly one island: cause trade, serpent flag clear', same(et.ships, [0, 2]) && tricksOf(et)[0].sails[0].cause === 'trade' && tricksOf(et)[0].sails[0].serpent === false);
+  // (f) one trick with every trigger around the table: 4p, Spice led.
+  const f = position({ players: 4, hands: [['spice-1', 'pearls-2', 'amber-6'], ['spice-6', 'pearls-3', 'amber-7'], ['amber-10', 'pearls-4', 'amber-8'], ['silk-1', 'pearls-5', 'amber-9']], ships: [0, 1, 0, 6], leader: 0 });
+  const ef = play(f, 'spice-1', 'amber-10');
+  const sf = ef.filter((e) => e.type === 'sailed');
+  check('R4.10 v2 (f) serpent lead, clean follow, discarded 10, traded 1: three ships sail once each, the clean follower stays', same(sf.map((e) => [e.seat, e.cause, e.serpent]), [[0, 'serpent', true], [2, 'discard', true], [3, 'trade', true]]) && same(f.ships, [1, 1, 1, 7]) && f.measures.sails === 3);
+  check('R4.10 v2 (f) the sails come in trick order and no seat sails twice', new Set(sf.map((e) => e.seat)).size === sf.length && same(tricksOf(f)[0].sails.map((x) => x.seat), [0, 2, 3]));
+  // The rule is standard: it holds under every Playtest switch.
+  for (const rules of [{ TRADE: 'optional' }, { TIE: 'real' }, { SCORING: 'serpents' }, { VOYAGES: 'four' }, { MOOR: 'score' }]) {
+    const lead = position({ players: 2, hands: [['spice-1', 'amber-3', 'amber-6'], ['spice-6', 'amber-4', 'amber-8']], ships: [0, 1], leader: 0, rules });
+    play(lead, 'spice-1');
+    const disc = position({ players: 2, hands: [['spice-4', 'amber-3', 'amber-6'], ['amber-10', 'pearls-3', 'amber-8']], ships: [0, 1], leader: 0, rules });
+    play(disc, 'spice-4', 'amber-10');
+    const clean = position({ players: 2, hands: [['spice-5', 'amber-3', 'amber-6'], ['spice-6', 'amber-4', 'amber-8']], ships: [0, 1], leader: 0, rules });
+    play(clean, 'spice-5');
+    check(`R4.10 v2 is standard under ${JSON.stringify(rules)}: a serpent lead sails, a discarded 10 sails once, a clean follow stays`, same(lead.ships, [1, 1]) && same(disc.ships, [0, 2]) && same(clean.ships, [0, 1]));
+  }
+}
+// R4.10 v2 over whole random games: each trick's sails are exactly the non-follows and the serpent cards, one per seat.
+for (const n of [2, 3, 4, 5]) {
+  let ok = true; let why = ''; let tricks = 0; let serpentOnly = 0;
+  for (let k = 0; k < 6 && ok; k++) {
+    const { state: g, events, consOk } = fullGame({ seed: `serp-sail-${n}-${k}`, players: n, firstDealer: k % n });
+    if (!consOk) { ok = false; why = 'conservation'; break; }
+    for (const h of g.handLog) for (const t of h.tricks) {
+      tricks++;
+      const want = t.plays.filter((p) => p.mode === 'trade' || p.mode === 'discard' || cardSerpents(p.card) > 0).map((p) => p.seat);
+      const got = t.sails.map((x) => x.seat);
+      if (!same(got, want) || new Set(got).size !== got.length) { ok = false; why = `trick ${t.n}: sails ${got} v ${want}`; }
+      serpentOnly += t.sails.filter((x) => x.cause === 'serpent').length;
+    }
+    const seen = Array.from({ length: n }, () => 0);
+    for (const e of events) if (e.type === 'sailed') seen[e.seat]++;
+    const rec = g.handLog.map((h) => h.sails).reduce((a, s) => a.map((x, i) => x + s[i]), Array.from({ length: n }, () => 0));
+    if (!same(rec, seen)) { ok = false; why = `voyage records ${rec} v events ${seen}`; }
+  }
+  check(`R4.10 v2 ${n}p: over 6 random games (${tricks} tricks) sails are the non-follows and serpent cards, one per seat, records match the events (${serpentOnly} serpent-only)`, ok && serpentOnly > 0, why);
+}
+
 // ---------- R13.3 TRADE=optional ----------
 {
   const mk = () => position({ players: 3, hands: [['spice-4', 'pearls-1'], ['silk-10', 'amber-3'], ['spice-2', 'pearls-2']], ships: [0, 1, 0], leader: 0, rules: { TRADE: 'optional' } });
@@ -533,7 +611,7 @@ for (const n of [2, 3, 4, 5]) {
   check('describe: lines read as English, second person for You', lines.some((l) => /^You (lead|follow|trade|discard|win|moor|sail)/.test(l)) && lines.some((l) => /^Sam (leads|follows|trades|discards|wins|moors|sails)/.test(l)));
   check('describe: no line has undefined, NaN or [object]', lines.every((l) => !/undefined|NaN|\[object/.test(l)));
   check('R4.17 every play event carries its mode; trades carry countsAs and sideways', all.filter((e) => e.type === 'card-played').every((e) => ['lead', 'follow', 'trade', 'discard'].includes(e.mode) && (e.mode !== 'trade' || (e.sideways && e.countsAs === e.ledSuit))));
-  check('R4.17 every sail carries seat, from, to and cause trade | discard', all.filter((e) => e.type === 'sailed').every((e) => e.to === (e.from + 1) % 8 && ['trade', 'discard'].includes(e.cause)));
+  check('R4.17 every sail carries seat, from, to, cause trade | discard | serpent and the serpent flag', all.filter((e) => e.type === 'sailed').every((e) => e.to === (e.from + 1) % 8 && ['trade', 'discard', 'serpent'].includes(e.cause) && typeof e.serpent === 'boolean' && (e.cause !== 'serpent' || e.serpent)));
   const go = all[all.length - 1];
   check('game-over carries the ranking, the tiebreak flag and the shared flag', go.type === 'game-over' && Array.isArray(go.ranking) && typeof go.tiebreakUsed === 'boolean' && typeof go.shared === 'boolean');
 }

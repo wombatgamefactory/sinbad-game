@@ -20,10 +20,11 @@
 // A completed trick (state.tricks, and handLog[h].tricks) is:
 //   { n, leader, seats, ledSuit, plays: [{ seat, card, mode, island, islandCargo, countsAs, sideways }],
 //     winner, winningCard, winningMode, tie, tieBrokenBy, serpents, serpentCards,
-//     sails: [{ seat, from, to, cause }] }
+//     sails: [{ seat, from, to, cause, serpent }] }   cause 'trade' | 'discard' | 'serpent' (a follow or lead that
+//     sailed only for its serpent); serpent: the card carries a serpent
 
 import { cardSuit, cardValue, cardSerpents } from './cards.js';
-import { getActionBlockReason, getValidActions, trickWinner, playMode, sails, islandCargoOf } from './legality.js';
+import { getActionBlockReason, getValidActions, trickWinner, playMode, sailsOnPlay, islandCargoOf } from './legality.js';
 import { dealHand } from './state.js';
 import { reckonHand, gameResult } from './scoring.js';
 
@@ -175,19 +176,22 @@ function resolveTrick(state, events) {
   if (serpents > 0 && events) {
     events.push({ type: 'serpent-taken', handNo: state.handNo, trickNo: t.n, seat: w, cards: serpentCards, serpents, totalSerpents: state.serpentsTaken[w] });
   }
-  // R8.1 step 4: every seat that did not follow sails one island clockwise (R4.10), in trick order.
+  // R8.1 step 4: every seat that did not follow, or played a serpent card, sails one island clockwise (R4.10), in
+  // trick order. One iteration per play and one play per seat, so a seat sails at most once whatever fires.
   const sailList = [];
   for (const p of t.plays) {
-    if (!sails(p.mode)) continue;
+    if (!sailsOnPlay(p.mode, p.card, params)) continue;
+    const serpent = cardSerpents(p.card, params) > 0;
+    const cause = p.mode === 'trade' || p.mode === 'discard' ? p.mode : 'serpent';
     const from = state.ships[p.seat];
     const to = (from + params.sailStep) % params.islands;
     state.ships[p.seat] = to;
     vs.sails[p.seat]++;
     m.sails++;
     m.sailsBySeat[p.seat]++;
-    sailList.push({ seat: p.seat, from, to, cause: p.mode });
+    sailList.push({ seat: p.seat, from, to, cause, serpent });
     if (events) {
-      events.push({ type: 'sailed', handNo: state.handNo, trickNo: t.n, seat: p.seat, from, to, cause: p.mode, fromCargo: state.ring[from], toCargo: state.ring[to] });
+      events.push({ type: 'sailed', handNo: state.handNo, trickNo: t.n, seat: p.seat, from, to, cause, serpent, fromCargo: state.ring[from], toCargo: state.ring[to] });
     }
   }
   const record = {

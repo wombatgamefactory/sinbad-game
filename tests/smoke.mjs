@@ -12,7 +12,7 @@
 
 import {
   startGame, applyAction, getValidActions, getActionBlockReason, viewFor, legalActionsFromView,
-  makeRng, deriveSeed, VARIANTS,
+  makeRng, deriveSeed, VARIANTS, cardSerpents,
 } from '../src/engine/index.js';
 import { getBot } from '../src/bots/index.js';
 import { suite, conservation } from './lib.mjs';
@@ -76,11 +76,12 @@ function invariants(evs, state, ctx) {
     } else if (e.type === 'trick-won') {
       const w = plays.find((p) => p.seat === e.winner);
       if (!w || w.mode === 'discard') return 'R4.7 a discard won';
-      const sailers = plays.filter((p) => p.mode === 'trade' || p.mode === 'discard').map((p) => p.seat);
+      const sailers = plays.filter((p) => p.mode === 'trade' || p.mode === 'discard' || cardSerpents(p.card) > 0).map((p) => p.seat);
       const sailed = evs.filter((x) => x.type === 'sailed' && x.handNo === e.handNo && x.trickNo === e.trickNo);
       if (sailed.map((x) => x.seat).join() !== sailers.join()) return `R4.10 sailers ${sailers} v sailed ${sailed.map((x) => x.seat)}`;
       if (sailed.some((x) => x.to !== (x.from + 1) % 8)) return 'R4.10 a sail of more than one island';
-      if (sailers.includes(plays[0].seat)) return 'R4.2 the leader sailed';
+      if (sailers.includes(plays[0].seat) && cardSerpents(plays[0].card) === 0) return 'R4.2 the leader sailed on a clean lead';
+      if (new Set(sailed.map((x) => x.seat)).size !== sailed.length) return 'R4.10 a seat sailed twice in one trick';
     } else if (e.type === 'voyage-ended') {
       const rec = state.handLog[e.handNo];
       if (rec.tricksWon.reduce((a, b) => a + b, 0) !== rec.handSize) return 'R5.5 tricks do not sum to the hand size';

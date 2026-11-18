@@ -28,7 +28,7 @@ export const ALLOWED_PARAMS = [
   'game_name', 'player_count', 'human_players', 'bot_players', 'bot_levels', 'rules_code',
   'hand_number', 'hands', 'tricks', 'duration_seconds',
   'winner_seat_type', 'winning_score', 'winning_margin', 'tiebreak_used', 'human_rank',
-  // new for Sinbad (counts only): trades laid sideways, cards that did not follow (each sails a ship), strict forced 10s (the 10 was the only island-cargo card held)
+  // new for Sinbad (counts only): trades laid sideways, ships sailed (a card that did not follow or that carries a serpent, at most one per player per trick), strict forced 10s (the 10 was the only island-cargo card held)
   'trades', 'sails', 'forced_tens',
 ];
 

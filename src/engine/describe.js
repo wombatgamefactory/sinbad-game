@@ -88,7 +88,8 @@ export function describeEvent(ev, names) {
     }
     case 'sailed': {
       const s = who(ev.seat);
-      return `${s} ${verb(s, 'sails')} from island ${ev.from + 1} (${SUIT_NAMES[ev.fromCargo]}) to island ${ev.to + 1} (${SUIT_NAMES[ev.toCargo]}).`;
+      const on = ev.cause === 'serpent' ? ' on, serpents aboard,' : '';
+      return `${s} ${verb(s, 'sails')}${on} from island ${ev.from + 1} (${SUIT_NAMES[ev.fromCargo]}) to island ${ev.to + 1} (${SUIT_NAMES[ev.toCargo]}).`;
     }
     case 'voyage-ended': {
       const parts = ev.lines.map((l, s) => `${who(s)} ${signed(l.trickScore)} tricks ${signed(l.serpentScore)} serpents = ${l.score}`);

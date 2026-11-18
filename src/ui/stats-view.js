@@ -66,7 +66,7 @@ export function statsHtml(data, filter = 'all') {
     <p class="st__muted">A trade is a card laid sideways because the island demands its cargo. A forced 10 is a trade where the 10 was the only island-cargo card held, so it had to be played.</p>
     ${table(['Measure', 'Total', 'Per voyage', 'Per player per voyage'], [
       ['Trades', ex.trades], ['Trades that won the trick', ex.tradesWon], ['Forced 10s', ex.forcedTens],
-      ['Sails (cards that did not follow)', ex.sails], ['Serpents taken', ex.serpents],
+      ['Sails (cards that did not follow, or carried a serpent)', ex.sails], ['Serpents taken', ex.serpents],
     ].map(([label, n]) => `<tr><th scope="row">${label}</th><td>${n}</td><td>${num(ex.voyages ? n / ex.voyages : null, 2)}</td><td>${num(ex.playerVoyages ? n / ex.playerVoyages : null, 2)}</td></tr>`))}
     <p>Over ${ex.voyages} voyage${ex.voyages === 1 ? '' : 's'} and ${ex.tricks} tricks: trades won <b>${pct(ex.tradesWon, ex.trades)}</b> of the time, and <b>${pct(ex.trades, ex.tricks)}</b> of tricks held a trade.${small(s.total)}</p>
     <h3>Ties and the tiebreak</h3>

@@ -3,7 +3,7 @@
 // records agree with the engine's own totals and winners; bad arguments are refused; --const is
 // restored after a run; a few sanity reference numbers; the report and the cross-check run.
 // Also checks the measures recorded per voyage (their arithmetic against each other), the reference
-// numbers of the original Python simulator as wide ranges, the first-leader edge of the later seats, the --const serpent probe, the
+// numbers of the Python reference simulator (the serpent-sails copy) as wide ranges, the first-leader edge of the later seats, the --const serpent probe, the
 // simulator-only bots, and every report section (summary, --deal, --moor, --catchup, --appb, the Python cross-check
 // on a tiny synthetic Python file).
 // Semantics: PERMANENTLY GREEN. Exit 1 on any failure.
@@ -86,11 +86,11 @@ check('different seeds differ', JSON.stringify(run(['--games=30', '--seed=1', '-
     const f = join(dir, 'b.json'); writeFileSync(f, JSON.stringify(data));
     const ch = batchSums(data, 200);
     const r = (num, den, sc = 1) => ratio(ch, num, den, sc).v;
-    // Python reference, 4 suits / 4p / heuristic: clean 31.8, trades 1.40, trade win 29.4, serpent wins 16.4, no duck 26.2, any-10 0.21, sails 2.29, laps 0.29, never sailed 9.1, ties 7.9, sd 1.56
-    check('Python reference, 4p heuristic: clean tricks % near 31.8', Math.abs(r('clean', 'tricks', 100) - 31.8) < 2.5, String(r('clean', 'tricks', 100)));
-    check('Python reference, 4p heuristic: trades per player-voyage near 1.40', Math.abs(r('trades', 'pv') - 1.4) < 0.1);
-    check('Python reference, 4p heuristic: trades that won near 29.4%, winning serpents near 16.4%, no duck near 26.2%', Math.abs(r('tw', 'trades', 100) - 29.4) < 3 && Math.abs(r('tsp', 'trades', 100) - 16.4) < 3 && Math.abs(r('nd', 'trades', 100) - 26.2) < 3);
-    check('Python reference, 4p heuristic: any-10 trades near 0.21, sails near 2.29, laps near 0.29, never sailed near 9.1%, ties near 7.9%', Math.abs(r('t10', 'pv') - 0.21) < 0.03 && Math.abs(r('sails', 'pv') - 2.29) < 0.15 && Math.abs(r('sails', 'pv', 1 / 8) - 0.29) < 0.03 && Math.abs(r('park', 'pv', 100) - 9.1) < 2 && Math.abs(r('ties', 'tricks', 100) - 7.9) < 1.5);
+    // Python reference (serpent-sails copy, spec v2 D15; 200 x 200 voyages, seed 1), 4 suits / 4p / heuristic: clean 32.2, trades 1.17, trade win 28.2, serpent wins 16.1, no duck 27.3, any-10 0.14, sails 3.89, laps 0.49, never sailed 0.7, ties 6.2, sd 1.53
+    check('Python reference, 4p heuristic: clean tricks % near 32.2', Math.abs(r('clean', 'tricks', 100) - 32.2) < 2.5, String(r('clean', 'tricks', 100)));
+    check('Python reference, 4p heuristic: trades per player-voyage near 1.17', Math.abs(r('trades', 'pv') - 1.17) < 0.1);
+    check('Python reference, 4p heuristic: trades that won near 28.2%, winning serpents near 16.1%, no duck near 27.3%', Math.abs(r('tw', 'trades', 100) - 28.2) < 3 && Math.abs(r('tsp', 'trades', 100) - 16.1) < 3 && Math.abs(r('nd', 'trades', 100) - 27.3) < 3);
+    check('Python reference, 4p heuristic: any-10 trades near 0.14, sails near 3.89, laps near 0.49, never sailed near 0.7%, ties near 6.2%', Math.abs(r('t10', 'pv') - 0.14) < 0.03 && Math.abs(r('sails', 'pv') - 3.89) < 0.2 && Math.abs(r('sails', 'pv', 1 / 8) - 0.49) < 0.03 && Math.abs(r('park', 'pv', 100) - 0.7) < 1 && Math.abs(r('ties', 'tricks', 100) - 6.2) < 1.5);
     const seatMean = (o) => ch.reduce((x, c) => x + c.seatS[o], 0) / ch.reduce((x, c) => x + c.k, 0);
     check('the later seats outscore the first leader by 0.1-0.4 a voyage (Appendix B: 0.2-0.3)', seatMean(3) - seatMean(0) > 0.1 && seatMean(3) - seatMean(0) < 0.4, String(seatMean(3) - seatMean(0)));
     const text = appendixB([f]);
@@ -98,7 +98,7 @@ check('different seeds differ', JSON.stringify(run(['--games=30', '--seed=1', '-
     const full = report([f], { detail: true, deal: true, moor: true, catchup: true });
     check('the --detail --deal --moor --catchup sections print', /Voyage score by leader offset/.test(full) && /R-squared, voyage score/.test(full) && /Voyage score by where the ship starts/.test(full) && /standing BEFORE the voyage/.test(full));
     // a tiny synthetic Python file (3 batches) exercises the cross-check path
-    const bt = (k) => ({ 'pos%': 31.8 + k * 0.1, trades_pp: 1.4, 'trade_win%': 29.4, 'trade_serpwin%': 16.4, 'noduck%': 26.2, t10_pp: 0.21, disc_pp: 0.89, sails_pp: 2.29, laps: 0.286, 'parked%': 9.1, 'ties%': 7.9, mean: -0.5, sd: 1.56, seats: [-0.63, -0.53, -0.49, -0.35], twin_gain: -0.08, 'twin_share%': 25 });
+    const bt = (k) => ({ 'pos%': 32.2 + k * 0.1, trades_pp: 1.17, 'trade_win%': 28.2, 'trade_serpwin%': 16.1, 'noduck%': 27.3, t10_pp: 0.14, disc_pp: 1.28, sails_pp: 3.89, laps: 0.486, 'parked%': 0.7, 'ties%': 6.2, mean: -0.5, sd: 1.53, seats: [-0.63, -0.53, -0.49, -0.35], twin_gain: -0.08, 'twin_share%': 25 });
     const py = join(dir, 'py.json');
     writeFileSync(py, JSON.stringify({ configs: [{ n: 4, bot: 'heuristic', suits: 4, B: 200, batches: [bt(0), bt(1), bt(2)] }] }));
     const x = crossPython(f, py);

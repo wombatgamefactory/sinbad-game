@@ -8,7 +8,7 @@ export {
 } from './cards.js';
 export { startGame, createGame, dealHand, emptyMeasures, emptyVoyageStats, mooringOrderFor, cloneState } from './state.js';
 export {
-  playableCards, legalCards, playMode, countsAsLed, sails, trickWinner, islandCargoOf, getValidActions, getPlayBlockReason,
+  playableCards, legalCards, playMode, countsAsLed, sails, sailsOnPlay, trickWinner, islandCargoOf, getValidActions, getPlayBlockReason,
   getActionBlockReason,
 } from './legality.js';
 export { applyAction, handEndReason } from './actions.js';

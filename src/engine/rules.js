@@ -4,8 +4,9 @@
 // The Voyages of Sinbad (the numbered rules R1 - R15).
 // 40 cargo cards: four cargoes x 1-10. Serpents on every 1 (one) and every 10 (two). A ring of 8
 // islands (two per cargo); each player's ship stands on one. Follow the led cargo; else trade a card
-// of your island's cargo (it counts as led and can win); else discard (cannot win). Every non-follow
-// sails its ship one island clockwise after the trick. +1 per trick, -1 per serpent taken.
+// of your island's cargo (it counts as led and can win); else discard (cannot win). Every non-follow, and
+// every serpent card played (a 1 or a 10, leads included), sails its ship one island clockwise after the
+// trick, at most one island per player per trick. +1 per trick, -1 per serpent taken.
 //
 // Vocabulary in code: a "suit" is a CARGO (SUITS = CARGOES), a "hand" in the shared plumbing
 // (state.handNo, state.handLog, params.handsPerGame) is a VOYAGE. Events use voyage names.
@@ -55,7 +56,7 @@ export const CONSTANTS = {
   SERPENT_POINTS: -1,
   /** R1.4 islands per cargo in the ring (8 islands). */
   ISLANDS_PER_CARGO: 2,
-  /** R4.10 islands a ship sails per non-follow. */
+  /** R4.10 islands a ship sails when it sails (a non-follow or a serpent card, at most once a trick). */
   SAIL_STEP: 1,
 };
 

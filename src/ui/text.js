@@ -6,7 +6,7 @@
 // for players. Plain English: a player should never need the rule book to read the log.
 // the table UI work owns the voice and the look; these are the generic UI's sentences.
 
-import { SUIT_NAMES, cardSuit, cardName, legalActionsFromView, playMode } from '../engine/index.js';
+import { SUIT_NAMES, cardSuit, cardName, legalActionsFromView, playMode, cardSerpents } from '../engine/index.js';
 
 const isYou = (name) => name === 'You';
 
@@ -71,14 +71,14 @@ export function winnerBanner(banner, names) {
 export function turnPrompt(view) {
   if (view.phase === 'moor') {
     const moored = view.ships.filter((x) => x !== null).length;
-    return `Moor your ship: choose any island${moored ? ' (ships may share)' : ''}. Each card you cannot follow will sail it one island clockwise.`;
+    return `Moor your ship: choose any island${moored ? ' (ships may share)' : ''}. A card that does not follow the cargo led, or that carries a serpent (a 1 or a 10), will sail it one island clockwise.`;
   }
   const t = view.trick;
   const hand = view.hand;
   const acts = legalActionsFromView(view);
   const led = t ? t.ledSuit : null;
   const island = view.ships[view.seat] === null ? null : view.ring[view.ships[view.seat]];
-  if (led === null) return 'You lead. Play any card: its cargo is the cargo led. Leading never sails your ship.';
+  if (led === null) return 'You lead. Play any card: its cargo is the cargo led. A clean lead (2 to 9) keeps your ship in port; a 1 or a 10 sails it on.';
   const follow = hand.filter((c) => cardSuit(c) === led);
   if (follow.length) {
     if (acts.length === 1) return `${ledText(led)}. ${cardName(acts[0].card)} is the only card you can play.`;
@@ -113,7 +113,7 @@ export function playSituation(view) {
   const base = { led, islandCargo, island, sailTo, sailToCargo: view.ring[sailTo] };
   const follows = cards.filter((c, i) => modes[i] === 'follow');
   const trades = cards.filter((c, i) => modes[i] === 'trade');
-  if (follows.length) return { kind: 'follow', ...base, count: follows.length, ranks: follows };
+  if (follows.length) return { kind: 'follow', ...base, count: follows.length, ranks: follows, serpentCount: follows.filter((c) => cardSerpents(c, view.params) > 0).length };
   if (trades.length) return { kind: view.rules.TRADE === 'optional' ? 'trade-optional' : 'trade', ...base, count: trades.length, ranks: trades };
   return { kind: 'discard', ...base, count: cards.length, ranks: [] };
 }
@@ -125,10 +125,14 @@ export function situationText(sit) {
   const isl = cargoName(sit.islandCargo);
   const sail = `Then your ship sails on to island ${sit.sailTo + 1} (${cargoName(sit.sailToCargo)}).`;
   if (sit.kind === 'follow') {
+    const allSerp = sit.serpentCount === sit.count;
+    const serpBody = allSerp ? ` It carries a serpent, so your ship sails on to island ${sit.sailTo + 1} (${cargoName(sit.sailToCargo)}) even though it follows.` : '';
+    const serpTip = sit.serpentCount > 0 && !allSerp ? 'A serpent card (a 1 or a 10) sails your ship on even when it follows; a card from 2 to 9 keeps it in port.' : '';
+    const pick = sit.count === 1 ? '' : 'A tick on a card means it would win the trick as it stands; a cross means it would not.';
     return {
       title: `Follow ${led}`,
-      body: sit.count === 1 ? `${led} was led and you hold it, so you must play your ${cardName(sit.ranks[0])}.` : `${led} was led and you hold it, so you must play one of your ${led} cards.`,
-      tip: sit.count === 1 ? '' : 'A tick on a card means it would win the trick as it stands; a cross means it would not.',
+      body: (sit.count === 1 ? `${led} was led and you hold it, so you must play your ${cardName(sit.ranks[0])}.` : `${led} was led and you hold it, so you must play one of your ${led} cards.`) + serpBody,
+      tip: [pick, serpTip].filter(Boolean).join(' '),
     };
   }
   if (sit.kind === 'trade') {
@@ -169,11 +173,11 @@ export const points = (k) => `${k} point${k === 1 ? '' : 's'}`;
 export function previewText(pv, names) {
   if (!pv) return '';
   const name = cardName(pv.card);
+  const sail = pv.sails ? ` Your ship would sail to island ${pv.sailTo + 1}${pv.sailToCargo ? ` (${cargoName(pv.sailToCargo)})` : ''}.` : '';
   if (pv.kind === 'lead') {
-    return `${name}: you would lead ${cargoName(cardSuit(pv.card))}. Everyone else must follow it if they can.`;
+    return `${name}: you would lead ${cargoName(cardSuit(pv.card))}. Everyone else must follow it if they can.${sail}`;
   }
   const how = pv.mode === 'trade' ? ` It is a trade: it counts as ${cargoName(pv.ledSuit)}.` : (pv.mode === 'discard' ? ' It is a discard: it cannot win.' : '');
-  const sail = pv.sails ? ` Your ship would sail to island ${pv.sailTo + 1}${pv.sailToCargo ? ` (${cargoName(pv.sailToCargo)})` : ''}.` : '';
   if (pv.wins) {
     if (pv.final) return `${name} wins the trick${pv.serpents ? ` and ${pv.serpents} serpent${pv.serpents === 1 ? '' : 's'}` : ''}.${how}${sail}`;
     return `${name} would win the trick as it stands; ${pv.remaining} still to play.${how}${sail}`;

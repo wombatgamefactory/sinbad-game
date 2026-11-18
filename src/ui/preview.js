@@ -6,7 +6,7 @@
 // forced moves on its own) the trick-won event says who won; if the trick is still open, the engine's
 // trickWinner() names who leads it right now. The real state is never touched.
 
-import { applyAction, getActionBlockReason, trickWinner, cloneState } from '../engine/index.js';
+import { applyAction, getActionBlockReason, trickWinner, cloneState, sailsOnPlay } from '../engine/index.js';
 
 /**
  * @param {object} state  the live state; the seat to act is state.toAct (phase 'play')
@@ -29,7 +29,7 @@ export function previewCard(state, card) {
   const sailed = events.find((e) => e.type === 'sailed' && e.handNo === state.handNo && e.trickNo === trickN && e.seat === seat);
   const base = {
     seat, card, mode: played.mode, ledSuit: played.ledSuit, wins: false, final: !!won, remaining: 0, winnerSeat: null, winnerCard: null,
-    serpents: won ? won.serpents : 0, sails: played.mode === 'trade' || played.mode === 'discard',
+    serpents: won ? won.serpents : 0, sails: !!sailed || sailsOnPlay(played.mode, card, state.params), // the engine's word: a non-follow or a serpent card (a lead too)
     sailTo: sailed ? sailed.to : (state.ships[seat] + state.params.sailStep) % state.params.islands,
     sailToCargo: sailed ? sailed.toCargo : state.ring[(state.ships[seat] + state.params.sailStep) % state.params.islands],
   };

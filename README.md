@@ -16,11 +16,11 @@ A trick-taking card game for 2 to 5 players (best with 3 or 4), played in the br
   - **Trade.** Otherwise, if you hold your island's cargo, you must play one of those cards, laid sideways. It counts as the cargo led, and it can win.
   - **Discard.** Otherwise play any card. It cannot win.
 - There are no trumps. The highest card counting as the cargo led wins the trick, and a tie goes to the card played first.
-- After the trick, every player who traded or discarded sails one island clockwise. The player who led never sails, and neither does anyone who followed.
+- After the trick, a player sails one island clockwise if their card did not follow the cargo led (every trade and every discard) **or** if it carries a serpent (any 1 or 10), whether it led, followed, traded or was discarded. One island at most per player per trick. A clean card (2 to 9) that follows, or leads, keeps its ship in port.
 - **Scoring.** A voyage (one deal) scores +1 for every trick you won and -1 for every serpent on the cards you won. Scores can go negative.
 - A game is one voyage per player (four voyages at two players), and the deal passes left each time. The highest total wins. If totals are tied, the tied player with the most points in the final voyage wins; if that is level too, the win is shared.
 
-The printed rule book is in [`rules/`](rules/sinbad-rule-book-v3.pdf), and the page has a short how-to-play.
+The printed rule book is in [`rules/`](rules/sinbad-rule-book-v6.pdf), and the page has a short how-to-play.
 
 ## What is in the game
 

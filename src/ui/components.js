@@ -283,7 +283,7 @@ export function handHtml(vm) {
     else if (reason) title = reason;
     else if (hint && hint.mode === 'trade') title = `Trade ${cardName(card)}: laid sideways, counts as ${SUIT_NAMES[hint.ledSuit]}`;
     else if (hint && hint.mode === 'discard') title = `Discard ${cardName(card)}: cannot win`;
-    else title = `Play ${cardName(card)}`;
+    else title = `Play ${cardName(card)}${hint && hint.sails && (hint.mode === 'lead' || hint.mode === 'follow') ? ': its serpent sails your ship on' : ''}`;
     const sr = legal && hint && (hint.mode === 'follow' || hint.mode === 'trade') ? (hint.wins ? ' (would win the trick as it stands)' : ' (would not win)') : '';
     return `<button type="button" class="${cls.join(' ')}" data-action="play" data-card="${card}" title="${esc(title)}" aria-label="${esc(cardName(card) + (trade ? ', a trade' : '') + sr)}"${legal ? '' : ' aria-disabled="true"'}>${cardImg(card)}${mark}${tag}</button>`;
   }).join('');
@@ -301,7 +301,7 @@ export function decisionHtml(vm) {
   const holds = ['spice', 'pearls', 'silk', 'amber'].map((c) => `<li>${badgeImg(c, 'decision__badge')}<span><b>${v.hand.filter((x) => cardSuit(x) === c).length}</b> ${esc(SUIT_NAMES[c])}</span></li>`).join('');
   return `<div class="decision" role="group" aria-label="Moor your ship">
     <p class="decision__title">Moor your ship: pick any island on the ring</p>
-    <p class="decision__text">${moored ? `${plural(moored, 'ship is', 'ships are')} already moored, and ships may share an island. ` : 'Ships may share an island. '}Ships only sail <b>clockwise</b>: whenever you trade or discard, your ship moves one island on. Your island's cargo is what you must trade when you cannot follow.</p>
+    <p class="decision__text">${moored ? `${plural(moored, 'ship is', 'ships are')} already moored, and ships may share an island. ` : 'Ships may share an island. '}Ships only sail <b>clockwise</b>: you sail one island on after a trick if your card did not follow the led cargo, or if it carries a serpent (a 1 or a 10). Your island's cargo is what you must trade when you cannot follow.</p>
     <ul class="decision__hold" aria-label="Cards in your hand by cargo">${holds}</ul>
   </div>`;
 }
@@ -311,7 +311,7 @@ export function situationHtml(vm) {
   if (!vm.myTurn || !vm.view || vm.view.phase !== 'play' || vm.frame) return '';
   const sit = playSituation(vm.view);
   const text = situationText(sit);
-  if (!text) return '<p class="situation situation--lead" id="situation">You lead: any card is allowed, and its cargo is the cargo led. Leading never sails your ship.</p>';
+  if (!text) return '<p class="situation situation--lead" id="situation">You lead: any card is allowed, and its cargo is the cargo led. A clean lead (2 to 9) keeps your ship in port; a serpent (a 1 or a 10) sails it on.</p>';
   const isTrade = sit.kind === 'trade' || sit.kind === 'trade-optional';
   const face = isTrade ? vm.board.islandFaces[sit.island] : null;
   return `<div class="situation situation--${sit.kind}" id="situation" role="note">

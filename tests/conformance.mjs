@@ -1,13 +1,13 @@
 // conformance.mjs - replays the Python fixtures (tests/fixtures/python-conformance.json, made by
-// a generator script kept OUTSIDE the repo, which drives the original
-// sim/sinbad-sim-v1.py unchanged over fixed deals, rings and moorings with random legal play) through
+// a generator script kept OUTSIDE the repo, which drives the Python reference simulator
+// (sim/sinbad-sim-v1.py with the one serpent-sails line) unchanged over fixed deals, rings and moorings with random legal play) through
 // the JS engine, one voyage each , and requires identical results:
 //   * the seat to play and the legal set at every card (its size, and for a follow / trade that every
 //     legal card is of the played card's cargo, for a lead / discard that it is the whole hand: with
 //     identical hands this is set equality, R4.3), and the mode of every play (lead / follow / trade /
 //     discard, R4.16);
 //   * every trick's winner (R4.7, R4.8, R4.12) and therefore every next leader (R4.11);
-//   * every ship's island after every trick (the sail step, R4.10, R4.2);
+//   * every ship's island after every trick (the sail step, R4.10 v2: a non-follow or a serpent card sails, once, R4.2);
 //   * the voyage score per seat (R5.2), sails per seat, and the voyage's counters: trades, tricks
 //     won by a trade, ties, discards, clean tricks, no-duck trades, trades of a 10, parked ships.
 // Every voyage is replayed twice: learner style (every card an explicit action, legal sets compared at
@@ -34,7 +34,7 @@ function bad(id, what) {
   if (firstFew.length < 12) firstFew.push(`${id}: ${what}`);
 }
 
-const cover = { forcedTens: 0, tradeTens: 0, ties: 0, tieTradeFirst: 0, tradeWins: 0, discards: 0, sharedStart: 0, twinStart: 0, setAside14: 0, setAside1: 0, autoPlays: 0, negative: 0, wrapSail: 0 };
+const cover = { forcedTens: 0, tradeTens: 0, ties: 0, tieTradeFirst: 0, tradeWins: 0, discards: 0, sharedStart: 0, twinStart: 0, setAside14: 0, setAside1: 0, autoPlays: 0, negative: 0, wrapSail: 0, serpentLeadSail: 0, serpentFollowSail: 0, serpentDoubleTrigger: 0 };
 
 /** One fixture voyage; returns nothing, counts mismatches. */
 function replay(fx, manual) {
@@ -105,6 +105,8 @@ function replay(fx, manual) {
       for (const e of events) if (e.type === 'sailed' && e.handNo === 0 && e.trickNo === trick + 1) {
         if (ships[e.seat] !== e.from) { bad(tag, `trick ${trick + 1}: seat ${e.seat} sails from ${e.from}, stood on ${ships[e.seat]}`); return; }
         ships[e.seat] = e.to;
+        if (manual && e.cause === 'serpent') { if (e.seat === js(seats[trick * n])) cover.serpentLeadSail++; else cover.serpentFollowSail++; }
+        if (manual && e.serpent && e.cause !== 'serpent') cover.serpentDoubleTrigger++; // a non-follow that also carries a serpent: one sail, not two
       }
       const pyShips = [...fx.q.slice(trick * n, trick * n + n)].map(Number);
       const want = Array.from({ length: n }, (_, j) => pyShips[py(j)]);
