@@ -100,7 +100,7 @@ export function howToPlayHtml() {
       <li><h4>Discard</h4><p>Otherwise play any card. It cannot win.</p></li>
       <li><h4>Win</h4><p>No trumps. The highest card counting as the cargo led wins. On a tie, the card played first wins.</p></li>
       <li><h4>Take</h4><p>The winner takes the trick and leads next. Serpent cards lie face up in front of the winner; the rest go face down.</p></li>
-      <li><h4>Sail</h4><p>Your ship sails one island clockwise if your card did not follow the cargo led, or if it carries a serpent (a 1 or a 10). The snakes are in the crate: you don't linger in port with them. One island at most per trick.</p></li>
+      <li><h4>Sail</h4><p>Only a clean follow - a serpent-free card of the cargo led, and a lead counts as following itself - keeps your ship in port. Any other card sails it one island clockwise, never more than one: every trade, every discard, every serpent (a 1 or a 10). The snakes are in the crate: you don't linger in port with them.</p></li>
     </ol>
     <h3 class="how__sub">Scoring</h3>
     <p class="how__score">Each voyage: <b>+1 per trick won, &minus;1 per serpent</b>. Serpents are on every 1 (one) and every 10 (two). A voyage ends when hands are empty; then a fresh ring is laid and the deal passes left. The game lasts one voyage per player (four at two players). The highest total wins; a tie goes to the most points in the final voyage, then is shared.</p>

@@ -1,7 +1,7 @@
 // game-config.js - the one place a game's name, slug and public address live in code.
 //
-// Tests read these constants instead of hard-coding the name. The rule book is v6
-// (rules/sinbad-rule-book-v6.pdf).
+// Tests read these constants instead of hard-coding the name. The rule book is v7
+// (rules/sinbad-rule-book-v7.pdf).
 
 /** Display name. */
 export const GAME_NAME = 'The Voyages of Sinbad';
@@ -12,7 +12,7 @@ export const GAME_TAGLINE = 'Every island demands its cargo.';
 /** Where the finished game is published (trailing slash). */
 export const PUBLISH_URL = 'https://www.wombatgamefactory.com/sinbad-game/';
 /** The rule book the landing page and the How to play dialog link to (a file under rules/). */
-export const RULEBOOK_URL = 'rules/sinbad-rule-book-v6.pdf';
+export const RULEBOOK_URL = 'rules/sinbad-rule-book-v7.pdf';
 /** Footer line under the setup form. */
 export const FOOTER_VERSION = 'Prototype';
 

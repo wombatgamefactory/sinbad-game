@@ -71,7 +71,7 @@ export function winnerBanner(banner, names) {
 export function turnPrompt(view) {
   if (view.phase === 'moor') {
     const moored = view.ships.filter((x) => x !== null).length;
-    return `Moor your ship: choose any island${moored ? ' (ships may share)' : ''}. A card that does not follow the cargo led, or that carries a serpent (a 1 or a 10), will sail it one island clockwise.`;
+    return `Moor your ship: choose any island${moored ? ' (ships may share)' : ''}. Only a clean follow - a serpent-free card of the cargo led - keeps your ship in port; any other card sails it one island clockwise.`;
   }
   const t = view.trick;
   const hand = view.hand;

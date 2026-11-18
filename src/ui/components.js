@@ -301,7 +301,7 @@ export function decisionHtml(vm) {
   const holds = ['spice', 'pearls', 'silk', 'amber'].map((c) => `<li>${badgeImg(c, 'decision__badge')}<span><b>${v.hand.filter((x) => cardSuit(x) === c).length}</b> ${esc(SUIT_NAMES[c])}</span></li>`).join('');
   return `<div class="decision" role="group" aria-label="Moor your ship">
     <p class="decision__title">Moor your ship: pick any island on the ring</p>
-    <p class="decision__text">${moored ? `${plural(moored, 'ship is', 'ships are')} already moored, and ships may share an island. ` : 'Ships may share an island. '}Ships only sail <b>clockwise</b>: you sail one island on after a trick if your card did not follow the led cargo, or if it carries a serpent (a 1 or a 10). Your island's cargo is what you must trade when you cannot follow.</p>
+    <p class="decision__text">${moored ? `${plural(moored, 'ship is', 'ships are')} already moored, and ships may share an island. ` : 'Ships may share an island. '}Ships only sail <b>clockwise</b>: after a trick, only a <b>clean follow</b> - a serpent-free card of the led cargo - keeps your ship in port; any other card (a trade, a discard, a serpent - a 1 or a 10) sails it one island on. Your island's cargo is what you must trade when you cannot follow.</p>
     <ul class="decision__hold" aria-label="Cards in your hand by cargo">${holds}</ul>
   </div>`;
 }
